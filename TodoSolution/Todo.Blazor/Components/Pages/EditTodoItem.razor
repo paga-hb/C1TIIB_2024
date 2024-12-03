@@ -1,0 +1,102 @@
+﻿@page "/edittodoitem"
+@page "/edittodoitem/{id:int}"
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject RestService RestService
+
+<PageTitle>@title</PageTitle>
+
+<h3>@title</h3>
+
+@if (todoItem is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="@todoItem" FormName="editTodoItem" OnValidSubmit="HandleSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="mb-3">
+                    <label for="id" class="form-label">Id</label>
+                    <InputNumber id="id" @bind-Value="todoItem.Id" class="form-control" readonly />
+                </div>
+                <div class="mb-3">
+                    <label for="taskname" class="form-label">Name</label>
+                    <InputText id="taskname" @bind-Value="todoItem.TaskName" class="form-control" />
+                    <ValidationMessage For="() => todoItem.TaskName"/>
+                </div>
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Notes</label>
+                    <InputText id="notes" @bind-Value="todoItem.Notes" class="form-control" />
+                    <ValidationMessage For="() => todoItem.Notes"/>
+                </div>
+                <div class="mb-3">
+                    <label for="done" class="form-label">Done</label>
+                    <InputCheckbox id="done" @bind-Value="todoItem.Done" class="form-check-input" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a role="button" class="btn btn-secondary" href="/">Cancel</a>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int? Id {get; set;}
+
+    [SupplyParameterFromForm]
+    private TodoItem? todoItem {get; set;}
+
+    private string title = string.Empty;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        // Form submitted
+        if (todoItem is not null)
+        {
+            return;
+        }
+
+        // Form presented
+        if (Id is not null)
+        {
+            todoItem = await RestService.GetTodoItemAsync(Id.Value);
+            title = $"Edit {todoItem.TaskName}";
+        }
+        else
+        {
+            todoItem = new()
+            {
+                Id = 0,
+                TaskName = string.Empty,
+                Notes = string.Empty,
+                Done = false
+            };
+
+            title = "New TodoItem";
+        }
+    }
+
+    private async Task HandleSubmitAsync()
+    {
+        ArgumentNullException.ThrowIfNull(todoItem);
+
+        if (Id is null)
+        {
+            await RestService.AddTodoItemAsync(todoItem);
+        }
+        else
+        {
+            todoItem.Id = Id.Value;
+            await RestService.UpdateTodoItemAsync(todoItem);
+        }
+        
+        NavigationManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "cucumber.features": [
+        "Todo.Blazor.BDDTests/Features/**/*.feature"
+    ],
+    "cucumber.glue": [
+
+        "Todo.Blazor.BDDTests/Steps/**/*.cs"
+    ],
+    "cucumberautocomplete.steps": [
+      "Todo.Blazor.BDDTests/Steps/**/*.cs"
+    ],
+    "cucumberautocomplete.syncfeatures": "Todo.Blazor.BDDTests/Features/**/*.feature",
+    "cucumberautocomplete.strictGherkinCompletion": true,
+    "cucumberautocomplete.smartSnippets": true
+}
