@@ -56,7 +56,7 @@ Then install the necessary Visual Studio Code Extensions by executing the comman
 
 Finally, make sure you are in the `testing` folder in your terminal, and open the first notebook in Visual Studio Code, by issuing the command below:
 
-- `code -g notebooks/vscode.ipynb:0 .`
+- `code -g notebooks/vscode1.ipynb:0 .`
 
 When the notebook opens in VSCode, click the text `Select Kernel` (in the top-right of the notebook), and choose `Python Environments... => conda (Python 3.10.15) .conda/bin/python`.
 
